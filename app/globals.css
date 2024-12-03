@@ -1,21 +1,90 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "@fortawesome/fontawesome-svg-core/styles.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --background: #ffffff;
+    --foreground: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+    :root {
+        --background: #ededed;
+        --foreground: #0a0a0a;
+    }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* body {
+    color: var(--foreground);
+    background: var(--background);
+    font-family: Arial, Helvetica, sans-serif;
+} */
+
+:root {
+    background-image: linear-gradient(to left top, #53575a, #4e5962, #4a5a6b, #465b73, #445c7c, #445c7c, #445c7c, #445c7c, #465b73, #4a5a6b, #4e5962, #53575a);
+}
+
+.card {
+    background-image: linear-gradient(to left top, #53575a, #616568, #6f7276, #7e8185, #8d8f94, #8d8f94, #8d8f94, #8d8f94, #7e8185, #6f7276, #616568, #53575a);
+}
+
+/* From Uiverse.io by YarikZhukovDesigner */
+.loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    height: 96px;
+    width: 96px;
+    animation: rotate_3922 1.2s linear infinite;
+    background-color: #cb0000;
+    background-image: linear-gradient(#cb0000, #ffc700, #c79c00);
+}
+
+.loader span {
+    position: absolute;
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+    background-color: #cb0000;
+    background-image: linear-gradient(#ff0000, #ffc800, #ffc800);
+}
+
+.loader span:nth-of-type(1) {
+    filter: blur(5px);
+}
+
+.loader span:nth-of-type(2) {
+    filter: blur(10px);
+}
+
+.loader span:nth-of-type(3) {
+    filter: blur(25px);
+}
+
+.loader span:nth-of-type(4) {
+    filter: blur(50px);
+}
+
+.loader::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    background-color: #fff;
+    border: solid 5px #ffffff;
+    border-radius: 50%;
+}
+
+@keyframes rotate_3922 {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
