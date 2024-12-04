@@ -1,56 +1,85 @@
 import React from "react";
 
 interface WeatherCardProps {
-    title: string;
-    subtitle: string;
+    title?: string;
+    subtitle?: string;
     icon?: React.ReactNode;
     temperature: number;
     description: string;
-    high: number;
-    low: number;
-    wind: string;
-    humidity: string;
-    visibility: string;
+    high?: number;
+    low?: number;
+    wind: number;
+    humidity: number;
+    visibility: number;
+    time: string;
+    precipitation: number;
+    cardStyle?: string;
+    temperature_apparent?: number;
 }
 
-const WeatherCard: React.FC<WeatherCardProps> = ({ title, subtitle, icon, temperature, description, high, low, wind, humidity, visibility }) => {
+const WeatherCard: React.FC<WeatherCardProps> = ({ title, subtitle, icon, temperature, description, high, low, wind, humidity, visibility, time, precipitation, temperature_apparent, cardStyle = "bg-white" }) => {
     return (
-        <div className=" flex items-center justify-center ">
-            <div className="flex flex-col card p-4 w-full max-w-xs rounded-xl shadow-xl">
-                <div className="font-bold text-xl">{title}</div>
-                <div className="text-sm text-gray-500">{subtitle}</div>
-                <div className="mt-6 text-6xl self-center inline-flex items-center justify-center rounded-lg text-indigo-400 h-24 w-24">{icon}</div>
-                <div className="flex flex-row items-center justify-center mt-6">
-                    <div className="font-medium text-6xl">{temperature}°</div>
-                    <div className="flex flex-col items-center ml-6">
-                        <div>{description}</div>
-                        <div className="mt-1">
-                            <span className="text-sm">↑</span>
-                            <span className="text-sm font-light text-gray-500">{high}°C</span>
-                        </div>
-                        <div>
-                            <span className="text-sm">↓</span>
-                            <span className="text-sm font-light text-gray-500">{low}°C</span>
-                        </div>
+        <div className={`${cardStyle} w-1/3 lg:w-1/6 `}>
+            <div className="font-bold mb-3">{time}</div>
+            <i className={`${icon} fas text-4xl mb-2`}></i>
+            <p>{description}</p>
+
+            {high ? (
+                <>
+                    <div>
+                        <i className="fas fa-thermometer-half text-blue-500 mr-2"></i>
+                        max {high}°C
                     </div>
+                    <div>
+                        <i className="fas fa-thermometer-half text-blue-500 mr-2"></i>
+                        min {low}°C`
+                    </div>
+                </>
+            ) : (
+                <div>
+                    <i className="fas fa-thermometer-half text-blue-500 mr-2"></i>
+                    {temperature} °C
                 </div>
-                <div className="flex flex-row justify-between mt-6">
-                    <div className="flex flex-col items-center">
-                        <div className="font-medium text-sm">Vent</div>
-                        <div className="text-sm text-gray-500">{wind}</div>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <div className="font-medium text-sm">Humidité</div>
-                        <div className="text-sm text-gray-500">{humidity}</div>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <div className="font-medium text-sm">Visibilité</div>
-                        <div className="text-sm text-gray-500">{visibility}</div>
-                    </div>
+            )}
+
+            {temperature_apparent ? (
+                <div>
+                    <i className="fas fa-thermometer-half text-blue-500 mr-2"></i>
+                    Ressenti {temperature_apparent}°C
                 </div>
+            ) : null}
+
+            <div>
+                <i className="fas fa-wind text-gray-500"></i> {wind} km/h
+            </div>
+            <div>
+                <i className="fas fa-tint text-blue-300"></i> {humidity}%
             </div>
         </div>
     );
 };
 
-export default WeatherCard;
+export default React.memo(WeatherCard);
+
+{
+    /* 
+
+
+<div className="mt-4 text-center">
+<div className="text-sm text-gray-500">Précipitations</div>
+<div className="font-bold text-lg">{precipitation} mm</div>
+</div> */
+}
+
+{
+    /* <div className="mt-4 grid grid-cols-2 gap-4">
+<div className="text-center">
+    <div className="text-sm text-gray-500">Max</div>
+    <div className="font-bold text-lg">{high}°C</div>
+</div>
+<div className="text-center">
+    <div className="text-sm text-gray-500">Min</div>
+    <div className="font-bold text-lg">{low}°C</div>
+</div>
+</div> */
+}
