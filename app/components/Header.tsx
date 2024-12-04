@@ -67,7 +67,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
         <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between p-4 gap-10 mb-6">
             {/* Premier élément */}
             <div className="card  rounded-3xl p-4 flex flex-col gap-3 items-center text-center sm:text-left sm:flex-1 ">
-                <h1 className="text-2xl sm:text-3xl font-bold">{formatCityName(location.cityName)} || "Rechercher votre ville" </h1>
+                <h1 className="text-2xl sm:text-3xl font-bold">{formatCityName(location.cityName)} ?? "Rechercher votre ville" </h1>
                 <p className="font-bold">{formatDateTime()}</p>
             </div>
             <div className="card p-4 rounded-3xl">
