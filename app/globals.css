@@ -29,7 +29,22 @@ h3 {
 }
 
 .card {
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.minicard {
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+    border: #d4d2d2 solid 1px;
+}
+
+.icon {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.icon-small {
+    width: 1.4rem;
+    height: 1.4rem;
 }
 
 /* From Uiverse.io by YarikZhukovDesigner */
