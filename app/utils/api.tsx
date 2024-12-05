@@ -1,4 +1,3 @@
-// src/services/weatherApi.ts
 import axios from "axios";
 import { Location, WeatherData } from "../utils/types/weather";
 
@@ -95,7 +94,7 @@ export const fetchWeatherData = async (
   const windSpeedUnit = "kmh";
   const precipitationUnit = "mm";
   const timeformat = "iso8601";
-  const timezone = "Europe/Paris";
+  const timezone = "auto"; // Utilisez "auto" pour détecter automatiquement le fuseau horaire
   try {
     const response = await axios.get(`https://api.open-meteo.com/v1/forecast`, {
       params: {

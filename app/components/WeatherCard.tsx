@@ -57,7 +57,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
         </div>
       )}
 
-      {temperature_apparent ? (
+      {temperature_apparent !== null && temperature_apparent !== undefined ? (
         <div>
           <i className="fas fa-thermometer-half text-blue-500 mr-2"></i>
           Ressenti {temperature_apparent}°C

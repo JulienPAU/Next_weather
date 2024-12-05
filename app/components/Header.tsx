@@ -15,7 +15,7 @@ interface HeaderProps {
     city: string
   ) => Promise<{ lat: number; lon: number; displayName: string }>;
   formatCityName: (cityName: string) => string;
-  formatDateTime: () => string;
+  formatDateTime: (timezone: string) => string;
   getWeatherIcon: (weatherCode: number, precipitation: number) => string;
   getWeatherText: (weatherCode: number) => string;
 }
@@ -112,7 +112,7 @@ export default function Header({
             ? formatCityName(location.cityName)
             : "Rechercher votre ville"}
         </h1>
-        <p className="font-bold">{formatDateTime()}</p>
+        <p className="font-bold">{formatDateTime(weatherData?.timezone)}</p>
       </div>
       <div className="card p-4 rounded-3xl">
         <div className="flex flex-col items-center ">
