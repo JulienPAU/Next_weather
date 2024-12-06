@@ -35,11 +35,15 @@ export const getWeatherIcon = (weatherCode: number, precipitation: number) => {
 
         // Gel
         case weatherCode >= 80 && weatherCode <= 84:
-            return "fa-icicles text-blue-300";
+            return "fa-icicles text-blue-400";
 
         // Neige
         case weatherCode >= 70 && weatherCode <= 79:
             return "fa-snowflake text-white";
+
+        // Averses de neige
+        case weatherCode === 85 || weatherCode === 86:
+            return " fa-snowflake  text-blue-300";
 
         // Orages
         case weatherCode >= 95 && weatherCode <= 99:
