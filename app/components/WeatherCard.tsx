@@ -4,7 +4,7 @@ interface WeatherCardProps {
     title?: string;
     subtitle?: string;
     icon?: React.ReactNode;
-    temperature: number;
+    temperature?: number;
     description: string;
     high?: number;
     low?: number;

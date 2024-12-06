@@ -149,7 +149,6 @@ const WeatherPage = () => {
                                     day: "numeric",
                                     month: "short",
                                 })}
-                                temperature={forecast.temperature_2m_max}
                                 wind={forecast.wind}
                                 precipitation={forecast.precipitation}
                                 high={forecast.temperature_2m_max}
