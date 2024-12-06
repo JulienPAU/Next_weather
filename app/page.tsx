@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Loader from "./components/Loader";
-import { getWeatherIcon, formatCityName, getCurrentHourIndex, formatDateTime, getWeatherText } from "./utils/utils";
+import { getWeatherIcon, formatCityName, getCurrentHourIndex, formatDateTime, getWeatherText, getCurrentDayIndex } from "./utils/utils";
 import { fetchWeatherData, fetchCityCoordinates } from "./utils/api";
 import { WeatherData, Location, HourlyForecast } from "./utils/types/weather";
 import Header from "./components/Header";
@@ -70,6 +70,8 @@ const WeatherPage = () => {
 
     // Préparation des données de prévision
     const currentHourIndex = getCurrentHourIndex(weatherData.hourly.time);
+    const currentDayIndex = getCurrentDayIndex(weatherData.daily.time);
+
     const hourlyForecast = weatherData.hourly.time.map((time, index) => ({
         time,
         temperature: weatherData.hourly.temperature_2m[index],
@@ -94,7 +96,8 @@ const WeatherPage = () => {
         sunset: weatherData.daily.sunset[index],
     }));
 
-    // Rendu principal
+    console.log(weatherData);
+
     return (
         <div className="container mx-auto   ">
             <Header
@@ -136,7 +139,7 @@ const WeatherPage = () => {
                 <div className="border-b-4    sm:w-5/6 lg:w-5/12">
                     <h2 className="text-2xl font-semibold m-4 text-center">Prévisions hebdomadaires</h2>
                     <div className="flex flex-wrap lg:gap-1 sm:gap-3 justify-evenly">
-                        {dailyForecast.map((forecast, index) => (
+                        {dailyForecast.slice(currentDayIndex + 1).map((forecast, index) => (
                             <WeatherCard
                                 key={index}
                                 title="Prévision quotidienne"

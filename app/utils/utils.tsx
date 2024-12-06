@@ -94,6 +94,14 @@ export const getCurrentHourIndex = (hourlyTimes: string[]): number => {
     });
 };
 
+export const getCurrentDayIndex = (dailyTimes: string[]): number => {
+    const now = new Date();
+    return dailyTimes.findIndex((time) => {
+        const forecastDate = new Date(time);
+        return forecastDate.getFullYear() === now.getFullYear() && forecastDate.getMonth() === now.getMonth() && forecastDate.getDate() === now.getDate();
+    });
+};
+
 export const formatDateTime = (timezone: string): string => {
     const time = moment().tz(timezone);
 
