@@ -146,6 +146,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
                     value={citySearch}
                     onInput={(e) => debouncedSetCitySearch((e.target as HTMLInputElement).value)}
                     onKeyDown={(e) => e.key === "Enter" && handleCitySearch(citySearch)}
+                    autoCorrect="off"
                     className="border bg-slate-200 rounded-lg px-4 py-2 w-full sm:max-w-xs mb-2"
                 />
                 <div className="flex gap-4">
