@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { Location } from "../utils/types/weather";
 import { fetchCityNameFromCoordinates } from "../utils/api";
+import { useDebouncedCallback } from "../utils/debounce";
 
 interface HeaderProps {
     location: Location;
@@ -18,33 +19,24 @@ export default function Header({ location, setLocation, loadWeatherData, weather
     const [error, setError] = useState<string | null>(null);
     const [citySearch, setCitySearch] = useState("");
 
-    // Fonction de debounce réutilisable
-    const debounce = (func: (...args: any[]) => void, delay: number) => {
-        let timeoutId: NodeJS.Timeout;
-        return (...args: any[]) => {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => func(...args), delay);
-        };
-    };
+    const debouncedSetCitySearch = useDebouncedCallback((value: string) => setCitySearch(value), 50);
 
-    const handleInputChange = useCallback(
-        debounce((value: string) => setCitySearch(value), 50),
-        []
+    const handleCitySearch = useCallback(
+        async (city: string) => {
+            if (!city.trim()) {
+                setError("Veuillez entrer une ville");
+                return;
+            }
+            try {
+                const { lat, lon, displayName } = await fetchCityCoordinates(city);
+                await loadWeatherData(lat, lon, displayName);
+                setCitySearch("");
+            } catch (err) {
+                setError("Ville introuvable");
+            }
+        },
+        [fetchCityCoordinates, loadWeatherData]
     );
-
-    const handleCitySearch = async (city: string) => {
-        if (!city.trim()) {
-            setError("Veuillez entrer une ville");
-            return;
-        }
-        try {
-            const { lat, lon, displayName } = await fetchCityCoordinates(city);
-            await loadWeatherData(lat, lon, displayName);
-            setCitySearch("");
-        } catch (err) {
-            setError("Ville introuvable");
-        }
-    };
 
     const handleGeolocation = async () => {
         if ("geolocation" in navigator) {
@@ -79,6 +71,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
             setError("Géolocalisation non supportée");
         }
     };
+
     const getSunTimeForToday = (weatherData: any, sunEvent: any) => {
         if (!weatherData?.daily) {
             return null;
@@ -151,7 +144,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
                     type="text"
                     placeholder="Rechercher une ville"
                     value={citySearch}
-                    onChange={(e) => handleInputChange(e.target.value)}
+                    onInput={(e) => debouncedSetCitySearch((e.target as HTMLInputElement).value)}
                     onKeyDown={(e) => e.key === "Enter" && handleCitySearch(citySearch)}
                     className="border bg-slate-200 rounded-lg px-4 py-2 w-full sm:max-w-xs mb-2"
                 />
