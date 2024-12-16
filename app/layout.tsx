@@ -15,7 +15,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
     title: "Météo",
-    description: "GMétéo et prévisions",
+    description: "Météo et prévisions",
 };
 
 export default function RootLayout({
