@@ -3,16 +3,16 @@ import "moment/locale/fr"; // Importez la locale française
 import "moment/locale/en-gb"; // Importez la locale anglaise (britannique)
 import "moment-timezone";
 
-export const getWeatherIcon = (weatherCode: number, precipitation: number) => {
+export const getWeatherIcon = (weatherCode: number, precipitation: number, is_day: boolean) => {
     // Codes de conditions météo selon WMO (Organisation Météorologique Mondiale)
     switch (true) {
         // Ciel dégagé
         case weatherCode === 0 || weatherCode === 1:
-            return "fa-sun text-yellow-500";
+            return is_day ? "fa-sun text-yellow-500" : "fa-moon text-blue-700";
 
         // Partiellement nuageux
         case weatherCode === 2:
-            return "fa-cloud-sun text-yellow-900";
+            return is_day ? "fa-cloud-sun text-yellow-900" : "fa-cloud-moon text-blue-700";
 
         // Nuageux
         case weatherCode === 3:

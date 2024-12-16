@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import Loader from "./components/Loader";
 import { getWeatherIcon, formatCityName, getCurrentHourIndex, formatDateTime, getWeatherText, getCurrentDayIndex } from "./utils/utils";
 import { fetchWeatherData, fetchCityCoordinates } from "./utils/api";
@@ -13,12 +13,11 @@ const WeatherPage = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [location, setLocation] = useState<Location>({
-        latitude: 48.0833, // Colmar par défaut
+        latitude: 48.0833,
         longitude: 7.3667,
         cityName: "Colmar",
     });
 
-    // Charger les données météo
     const loadWeatherData = async (lat: number, long: number, cityName?: string) => {
         setLoading(true);
         try {
@@ -116,7 +115,7 @@ const WeatherPage = () => {
                         {hourlyForecast.slice(currentHourIndex + 1, currentHourIndex + 9).map((forecast, index) => (
                             <WeatherCard
                                 key={index}
-                                icon={getWeatherIcon(forecast.weathercode, forecast.precipitation)}
+                                icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, false)}
                                 description={getWeatherText(forecast.weathercode)}
                                 time={new Date(forecast.time).toLocaleTimeString("fr-FR", {
                                     hour: "2-digit",
@@ -141,7 +140,7 @@ const WeatherPage = () => {
                             <WeatherCard
                                 key={index}
                                 title="Prévision quotidienne"
-                                icon={getWeatherIcon(forecast.weathercode, forecast.precipitation)}
+                                icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, false)}
                                 description={getWeatherText(forecast.weathercode)}
                                 time={new Date(forecast.time).toLocaleDateString("fr-FR", {
                                     weekday: "short",

@@ -8,6 +8,7 @@ export interface WeatherData {
         weather_code: number;
         time: string;
         visibility: number;
+        is_day: number;
     };
     daily: {
         temperature_2m_max: number[];

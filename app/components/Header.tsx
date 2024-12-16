@@ -11,7 +11,7 @@ interface HeaderProps {
     fetchCityCoordinates: (city: string) => Promise<{ lat: number; lon: number; displayName: string }>;
     formatCityName: (cityName: string) => string;
     formatDateTime: (timezone: string) => string;
-    getWeatherIcon: (weatherCode: number, precipitation: number) => string;
+    getWeatherIcon: (weatherCode: number, precipitation: number, is_day: boolean) => string;
     getWeatherText: (weatherCode: number) => string;
 }
 
@@ -97,6 +97,8 @@ export default function Header({ location, setLocation, loadWeatherData, weather
     const sunriseTimeToday = getSunTimeForToday(weatherData, "sunrise");
     const sunsetTimeToday = getSunTimeForToday(weatherData, "sunset");
 
+    console.log("weatherData", weatherData);
+
     return (
         <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between p-4 gap-10 border-b-4 ">
             {/* Premier élément */}
@@ -112,7 +114,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
                         <p>{sunriseTimeToday}</p>
                     </div>
                     <div className="text-center">
-                        <i className={`fas ${getWeatherIcon(weatherData?.current?.weather_code, weatherData?.current?.precipitation)} text-7xl mb-2 `}></i>
+                        <i className={`fas ${getWeatherIcon(weatherData?.current?.weather_code, weatherData?.current?.precipitation, weatherData?.current?.is_day)} text-7xl mb-2 `}></i>
                         <p className="font-bold ">{getWeatherText(weatherData?.current?.weather_code)}</p>
                     </div>
                     <div className="flex flex-col font-semibold">
