@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Location } from "../utils/types/weather";
 import { fetchCityNameFromCoordinates } from "../utils/api";
 import { useDebouncedCallback } from "../utils/debounce";
@@ -18,25 +18,28 @@ interface HeaderProps {
 export default function Header({ location, setLocation, loadWeatherData, weatherData, fetchCityCoordinates, formatCityName, formatDateTime, getWeatherIcon, getWeatherText }: HeaderProps) {
     const [error, setError] = useState<string | null>(null);
     const [citySearch, setCitySearch] = useState("");
+    const inputValueRef = useRef("");
 
-    const debouncedSetCitySearch = useDebouncedCallback((value: string) => setCitySearch(value), 50);
+    const debouncedSetCitySearch = useDebouncedCallback((value: string) => setCitySearch(value), 2000);
 
-    const handleCitySearch = useCallback(
-        async (city: string) => {
-            if (!city.trim()) {
-                setError("Veuillez entrer une ville");
-                return;
-            }
-            try {
-                const { lat, lon, displayName } = await fetchCityCoordinates(city);
-                await loadWeatherData(lat, lon, displayName);
-                setCitySearch("");
-            } catch (err) {
-                setError("Ville introuvable");
-            }
-        },
-        [fetchCityCoordinates, loadWeatherData]
-    );
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        inputValueRef.current = e.target.value; // Stocker dans la ref
+        debouncedSetCitySearch(e.target.value); // Appeler debounce pour la recherche
+    };
+
+    const handleCitySearch = useCallback(async () => {
+        const city = inputValueRef.current.trim();
+        if (!city) {
+            setError("Veuillez entrer une ville");
+            return;
+        }
+        try {
+            const { lat, lon, displayName } = await fetchCityCoordinates(city);
+            await loadWeatherData(lat, lon, displayName);
+        } catch (err) {
+            setError("Ville introuvable");
+        }
+    }, [fetchCityCoordinates, loadWeatherData]);
 
     const handleGeolocation = async () => {
         if ("geolocation" in navigator) {
@@ -138,18 +141,18 @@ export default function Header({ location, setLocation, loadWeatherData, weather
                 </div>
             </div>
 
-            {/* Dernier élément */}
             <div className="flex flex-col items-center gap-3 sm:flex-1 card  rounded-3xl p-4 ">
                 <input
                     type="text"
+                    defaultValue=""
+                    onChange={handleInputChange}
+                    onKeyDown={(e) => e.key === "Enter" && handleCitySearch()}
                     placeholder="Rechercher une ville"
-                    value={citySearch}
-                    onChange={(e) => debouncedSetCitySearch((e.target as HTMLInputElement).value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleCitySearch(citySearch)}
                     className="border bg-slate-200 rounded-lg px-4 py-2 w-full sm:max-w-xs mb-2"
                 />
+
                 <div className="flex gap-4">
-                    <button onClick={() => handleCitySearch(citySearch)} className="bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full sm:w-auto">
+                    <button onClick={() => handleCitySearch()} className="bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full sm:w-auto">
                         Rechercher
                     </button>
                     <button onClick={handleGeolocation} className="bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-full fas fa-location-dot text-2xl">

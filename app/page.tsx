@@ -96,8 +96,6 @@ const WeatherPage = () => {
         sunset: weatherData.daily.sunset[index],
     }));
 
-    console.log(weatherData);
-
     return (
         <div className="container mx-auto   ">
             <Header
