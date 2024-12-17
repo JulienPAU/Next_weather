@@ -97,27 +97,25 @@ export default function Header({ location, setLocation, loadWeatherData, weather
     const sunriseTimeToday = getSunTimeForToday(weatherData, "sunrise");
     const sunsetTimeToday = getSunTimeForToday(weatherData, "sunset");
 
-    console.log("weatherData", weatherData);
-
     return (
         <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between p-4 gap-10 border-b-4 ">
             {/* Premier élément */}
             <div className="card  rounded-3xl p-4 flex flex-wrap flex-col gap-3 items-center text-center sm:text-left sm:flex-1 ">
-                <h1 className="text-2xl sm:text-3xl font-bold"> {location.cityName ? formatCityName(location.cityName) : "Rechercher votre ville"} </h1>
-
-                <div className="font-bold">
-                    {formatDateTime(weatherData?.timezone)}
-
-                    {weatherData?.current?.is_day ? (
-                        <div className=" fas fa-sun text-yellow-500 px-2">
-                            <span className=" text-base font-serif px-1">Jour</span>
-                        </div>
-                    ) : (
-                        <div className=" fas fa-moon text-blue-700 px-2">
-                            <span className=" text-base font-serif px-1">Nuit</span>
-                        </div>
-                    )}
+                <div className="flex flex-col justify-center items-center gap-2 lg:gap-3 lg:flex-row lg:items-start  ">
+                    <h1 className="text-4xl  font-bold"> {location.cityName ? formatCityName(location.cityName) : "Rechercher votre ville"} </h1>
+                    <div className="">
+                        {weatherData?.current?.is_day ? (
+                            <div className=" fas fa-sun text-yellow-500 ">
+                                <span className=" text-sm font-serif px-1.5">Jour</span>
+                            </div>
+                        ) : (
+                            <div className=" fas fa-moon text-blue-700 ">
+                                <span className=" text-sm font-serif px-1.5">Nuit</span>
+                            </div>
+                        )}
+                    </div>
                 </div>
+                <div className="font-bold">{formatDateTime(weatherData?.timezone)}</div>
             </div>
             <div className="card p-4 rounded-3xl mb-2">
                 <div className="flex justify-evenly items-center ">
