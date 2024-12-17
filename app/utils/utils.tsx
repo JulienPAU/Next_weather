@@ -112,7 +112,7 @@ export const formatDateTime = (timezone: string): string => {
         time.locale("en-gb"); // Définir la locale sur "en-gb" (anglais britannique)
     }
 
-    const datePart = time.format("ddd D MMM");
+    const datePart = time.format("ddd D MMM YY");
     const timePart = time.format("HH:mm");
     return `${datePart} ${timePart}`;
 };
