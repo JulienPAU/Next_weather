@@ -33,6 +33,7 @@ export interface WeatherData {
         precipitation: number[];
         weather_code: number[];
         apparent_temperature: number[];
+        is_day: boolean[];
     };
 }
 

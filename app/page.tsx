@@ -80,6 +80,7 @@ const WeatherPage = () => {
         precipitation: weatherData.hourly.precipitation[index],
         weathercode: weatherData.hourly.weather_code[index],
         temperature_apparent: weatherData.hourly.apparent_temperature[index],
+        is_day: weatherData.hourly.is_day[index],
     }));
 
     const dailyForecast = weatherData.daily.time.map((time, index) => ({
@@ -94,6 +95,8 @@ const WeatherPage = () => {
         sunrise: weatherData.daily.sunrise[index],
         sunset: weatherData.daily.sunset[index],
     }));
+
+    console.log(weatherData);
 
     return (
         <div className="container mx-auto   ">
@@ -115,7 +118,7 @@ const WeatherPage = () => {
                         {hourlyForecast.slice(currentHourIndex + 1, currentHourIndex + 9).map((forecast, index) => (
                             <WeatherCard
                                 key={index}
-                                icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, false)}
+                                icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, forecast.is_day)}
                                 description={getWeatherText(forecast.weathercode)}
                                 time={new Date(forecast.time).toLocaleTimeString("fr-FR", {
                                     hour: "2-digit",

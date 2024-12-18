@@ -43,6 +43,7 @@ export const fetchWeatherData = async (lat: number, long: number, cityName?: str
         "soil_moisture_3_9cm",
         "soil_moisture_9_27cm",
         "soil_moisture_27_81cm",
+        "is_day",
     ];
 
     const daily = [
