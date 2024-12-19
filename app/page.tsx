@@ -143,7 +143,7 @@ const WeatherPage = () => {
                             <WeatherCard
                                 key={index}
                                 title="Prévision quotidienne"
-                                icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, false)}
+                                icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, 1)}
                                 description={getWeatherText(forecast.weathercode)}
                                 time={new Date(forecast.time).toLocaleDateString("fr-FR", {
                                     weekday: "short",

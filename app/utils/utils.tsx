@@ -3,7 +3,7 @@ import "moment/locale/fr"; // Importez la locale française
 import "moment/locale/en-gb"; // Importez la locale anglaise (britannique)
 import "moment-timezone";
 
-export const getWeatherIcon = (weatherCode: number, precipitation: number, is_day: boolean) => {
+export const getWeatherIcon = (weatherCode: number, precipitation: number, is_day: number) => {
     // Codes de conditions météo selon WMO (Organisation Météorologique Mondiale)
     switch (true) {
         // Ciel dégagé

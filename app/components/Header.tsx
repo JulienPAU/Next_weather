@@ -11,7 +11,7 @@ interface HeaderProps {
     fetchCityCoordinates: (city: string) => Promise<{ lat: number; lon: number; displayName: string }>;
     formatCityName: (cityName: string) => string;
     formatDateTime: (timezone: string) => string;
-    getWeatherIcon: (weatherCode: number, precipitation: number, is_day: boolean) => string;
+    getWeatherIcon: (weatherCode: number, precipitation: number, is_day: number) => string;
     getWeatherText: (weatherCode: number) => string;
 }
 
