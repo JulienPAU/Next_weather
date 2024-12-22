@@ -91,7 +91,7 @@ export const fetchWeatherData = async (lat: number, long: number, cityName?: str
                 precipitation_unit: precipitationUnit,
                 timeformat,
                 timezone,
-                past_days: 0,
+                past_days: 2,
                 forecast_days: 9,
             },
         });

@@ -109,11 +109,11 @@ const WeatherPage = () => {
                 getWeatherIcon={getWeatherIcon}
                 getWeatherText={getWeatherText}
             />
-            <div className="flex flex-wrap justify-evenly  w-full">
-                <div className=" border-b-4   sm:w-5/6 lg:w-5/12">
+            <div className="flex flex-wrap flex-col justify-evenly p-4  w-full">
+                <div className="rounded-3xl p-4 flex flex-wrap flex-col gap-3 items-center text-center sm:text-left sm:flex-1 shadow-light dark:shadow-dark my-5">
                     <h2 className="text-2xl font-semibold m-4 text-center">Prévisions horaires</h2>
-                    <div className="flex flex-wrap  lg:gap-1 sm:gap-3 justify-evenly">
-                        {hourlyForecast.slice(currentHourIndex + 1, currentHourIndex + 9).map((forecast, index) => (
+                    <div className="flex flex-wrap w-full  lg:gap-1 sm:gap-3 justify-evenly">
+                        {hourlyForecast.slice(currentHourIndex + 1, currentHourIndex + 11).map((forecast, index) => (
                             <WeatherCard
                                 key={index}
                                 icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, forecast.is_day)}
@@ -128,16 +128,16 @@ const WeatherPage = () => {
                                 humidity={forecast.humidity}
                                 visibility={forecast.visibility}
                                 precipitation={forecast.precipitation}
-                                cardStyle="bg-none"
+                                cardStyle="bg-none w-full lg:w-2/12 text-center py-1"
                             />
                         ))}
                     </div>
                 </div>
 
-                <div className="border-b-4    sm:w-5/6 lg:w-5/12">
+                <div className="rounded-3xl p-4 flex flex-wrap flex-col gap-3 items-center text-center sm:text-left sm:flex-1 shadow-light dark:shadow-dark my-5">
                     <h2 className="text-2xl font-semibold m-4 text-center">Prévisions hebdomadaires</h2>
-                    <div className="flex flex-wrap lg:gap-1 sm:gap-3 justify-evenly">
-                        {dailyForecast.slice(currentDayIndex + 1).map((forecast, index) => (
+                    <div className="flex flex-wrap w-full  lg:gap-1 sm:gap-3 justify-evenly">
+                        {dailyForecast.slice(currentDayIndex - 1).map((forecast, index) => (
                             <WeatherCard
                                 key={index}
                                 title="Prévision quotidienne"
@@ -152,7 +152,7 @@ const WeatherPage = () => {
                                 precipitation={forecast.precipitation}
                                 high={forecast.temperature_2m_max}
                                 low={forecast.temperature_2m_min}
-                                cardStyle="bg-none"
+                                cardStyle="bg-none w-full lg:w-2/12 text-center py-1 px-1"
                                 sunrise={new Date(forecast.sunrise).toLocaleTimeString("fr-FR", {
                                     hour: "2-digit",
                                     minute: "2-digit",

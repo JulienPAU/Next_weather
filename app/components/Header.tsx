@@ -97,15 +97,13 @@ export default function Header({ location, setLocation, loadWeatherData, weather
     const sunriseTimeToday = getSunTimeForToday(weatherData, "sunrise");
     const sunsetTimeToday = getSunTimeForToday(weatherData, "sunset");
 
-    const [isDark, setIsDark] = useState(false);
-
     return (
-        <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between p-4 gap-10 border-b-4 ">
+        <div className="flex flex-col lg:flex-row items-center p-4 gap-10  ">
             {/* Premier élément */}
-            <div className="rounded-3xl p-4 flex flex-wrap flex-col gap-3 items-center text-center sm:text-left sm:flex-1 shadow-light dark:shadow-dark">
+            <div className="rounded-3xl  p-4 flex flex-wrap flex-col gap-3 items-center text-center sm:text-left sm:flex-1 shadow-light dark:shadow-dark">
                 <div className="flex flex-col justify-center items-center gap-2 lg:gap-3 lg:flex-row lg:items-start  ">
                     <h1 className="text-4xl  font-bold"> {location.cityName ? formatCityName(location.cityName) : "Rechercher votre ville"} </h1>
-                    <div className="">
+                    <div>
                         {weatherData?.current?.is_day ? (
                             <div className=" fas fa-sun text-yellow-500 ">
                                 <span className=" text-sm font-serif px-1.5">Jour</span>
@@ -119,29 +117,34 @@ export default function Header({ location, setLocation, loadWeatherData, weather
                 </div>
                 <div className="font-bold">{formatDateTime(weatherData?.timezone)}</div>
             </div>
-            <div className="shadow-light dark:shadow-dark p-4 rounded-3xl mb-2">
-                <div className="flex justify-evenly items-center ">
-                    <div className="flex flex-col font-semibold">
-                        {" "}
-                        <img src="sunrise.png" alt="Lever du soleil" className="icon" />
-                        <p>{sunriseTimeToday}</p>
-                    </div>
-                    <div className="text-center">
-                        <i className={`fas ${getWeatherIcon(weatherData?.current?.weather_code, weatherData?.current?.precipitation, weatherData?.current?.is_day)} text-7xl mb-2 `}></i>
-                        <p className="font-bold ">{getWeatherText(weatherData?.current?.weather_code)}</p>
-                    </div>
-                    <div className="flex flex-col font-semibold">
-                        <img src="sunset.png" alt="Coucher du soleil" className="icon" />
-                        <p> {sunsetTimeToday}</p>
+
+            {/* Élement du milieu */}
+            <div className="shadow-light dark:shadow-dark p-4 rounded-3xl mb-2 flex flex-col lg:flex-row gap-4">
+                <div className="flex justify-evenly items-center gap-6 ">
+                    <div className="text-center flex gap-3">
+                        <i className={`fas ${getWeatherIcon(weatherData?.current?.weather_code, weatherData?.current?.precipitation, weatherData?.current?.is_day)} text-8xl mb-2 `}></i>
+
+                        <div className="flex flex-col gap-1">
+                            <div className="text-4xl font-bold">{weatherData?.current?.temperature_2m}°C</div>
+                            <p className="font-bold italic ">{getWeatherText(weatherData?.current?.weather_code)}</p>
+                        </div>
                     </div>
                 </div>
-                {/* Élement du milieu */}
+
                 <div className="p-4 flex flex-col gap-3 items-center justify-center text-center sm:flex-1">
                     {/* <h2 className="font-bold text-xl sm:text-2xl text-black">Conditions actuelles</h2> */}
-                    <div className="flex flex-wrap gap-4 justify-center text-lg lg:text-base font-bold">
-                        <div>
-                            <i className="fas fa-thermometer-half text-blue-500"></i> {weatherData?.current?.temperature_2m}°C
+                    <div className="flex flex-row w-full justify-evenly text-lg lg:text-base font-bold">
+                        <div className="flex flex-col font-semibold">
+                            {" "}
+                            <img src="sunrise.png" alt="Lever du soleil" className="icon" />
+                            <p>{sunriseTimeToday}</p>
                         </div>
+                        <div className="flex flex-col font-semibold">
+                            <img src="sunset.png" alt="Coucher du soleil" className="icon" />
+                            <p> {sunsetTimeToday}</p>
+                        </div>
+                    </div>
+                    <div className="flex flex-wrap gap-4 justify-center text-lg lg:text-base font-bold">
                         <div>
                             <i className="fas fa-thermometer-half text-blue-500"></i> Ressenti {weatherData?.current?.apparent_temperature}°C
                         </div>
