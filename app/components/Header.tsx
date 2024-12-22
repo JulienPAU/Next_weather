@@ -97,10 +97,12 @@ export default function Header({ location, setLocation, loadWeatherData, weather
     const sunriseTimeToday = getSunTimeForToday(weatherData, "sunrise");
     const sunsetTimeToday = getSunTimeForToday(weatherData, "sunset");
 
+    const [isDark, setIsDark] = useState(false);
+
     return (
         <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between p-4 gap-10 border-b-4 ">
             {/* Premier élément */}
-            <div className="card  rounded-3xl p-4 flex flex-wrap flex-col gap-3 items-center text-center sm:text-left sm:flex-1 ">
+            <div className="rounded-3xl p-4 flex flex-wrap flex-col gap-3 items-center text-center sm:text-left sm:flex-1 shadow-light dark:shadow-dark">
                 <div className="flex flex-col justify-center items-center gap-2 lg:gap-3 lg:flex-row lg:items-start  ">
                     <h1 className="text-4xl  font-bold"> {location.cityName ? formatCityName(location.cityName) : "Rechercher votre ville"} </h1>
                     <div className="">
@@ -117,7 +119,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
                 </div>
                 <div className="font-bold">{formatDateTime(weatherData?.timezone)}</div>
             </div>
-            <div className="card p-4 rounded-3xl mb-2">
+            <div className="shadow-light dark:shadow-dark p-4 rounded-3xl mb-2">
                 <div className="flex justify-evenly items-center ">
                     <div className="flex flex-col font-semibold">
                         {" "}
@@ -154,7 +156,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
                 </div>
             </div>
 
-            <div className="flex flex-col items-center gap-3 sm:flex-1 card  rounded-3xl p-4 ">
+            <div className="flex flex-col items-center gap-3 sm:flex-1 shadow-light dark:shadow-dark rounded-3xl p-4 ">
                 <input
                     type="text"
                     defaultValue=""

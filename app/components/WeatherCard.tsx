@@ -21,7 +21,9 @@ interface WeatherCardProps {
 
 const WeatherCard: React.FC<WeatherCardProps> = ({ title, subtitle, icon, temperature, description, high, low, wind, humidity, visibility, time, precipitation, temperature_apparent, sunrise, sunset, cardStyle = "bg-white" }) => {
     return (
-        <div className={`${cardStyle} w-full lg:w-5/12 minicard bg-slate-200 rounded-xl mx-5 lg:mx-0  mb-5 lg:mb-3 flex justify-evenly gap-5 items-center align-middle`}>
+        <div
+            className={`${cardStyle} w-full lg:w-5/12 minicard bg-slate-200 rounded-xl mx-5 lg:mx-0  mb-5 lg:mb-3 flex justify-evenly gap-5 items-center align-middle shadow-md shadow-gray-300  dark:shadow-gray-700 dark:bg-slate-900  border-2 border-gray-300 dark:border-gray-700`}
+        >
             <div className="text-center">
                 <div className="font-bold text-lg mb-3">{time}</div>
                 <i className={`${icon} fas text-5xl mb-2`}></i>

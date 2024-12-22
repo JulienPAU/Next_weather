@@ -96,10 +96,8 @@ const WeatherPage = () => {
         sunset: weatherData.daily.sunset[index],
     }));
 
-    console.log(weatherData);
-
     return (
-        <div className="container mx-auto   ">
+        <div className={`container mx-auto w-full `}>
             <Header
                 location={location}
                 setLocation={setLocation}
@@ -112,7 +110,7 @@ const WeatherPage = () => {
                 getWeatherText={getWeatherText}
             />
             <div className="flex flex-wrap justify-evenly  w-full">
-                <div className=" border-b-4    sm:w-5/6 lg:w-5/12">
+                <div className=" border-b-4   sm:w-5/6 lg:w-5/12">
                     <h2 className="text-2xl font-semibold m-4 text-center">Prévisions horaires</h2>
                     <div className="flex flex-wrap  lg:gap-1 sm:gap-3 justify-evenly">
                         {hourlyForecast.slice(currentHourIndex + 1, currentHourIndex + 9).map((forecast, index) => (
