@@ -101,9 +101,14 @@ export const getWindDirectionIcon = (angle: number): { direction: string; icon: 
 };
 export const getCurrentHourIndex = (hourlyTimes: string[]): number => {
     const now = new Date();
+    const currentYear = now.getUTCFullYear();
+    const currentMonth = now.getUTCMonth();
+    const currentDate = now.getUTCDate();
+    const currentHour = now.getUTCHours();
+
     return hourlyTimes.findIndex((time) => {
-        const forecastTime = new Date(time);
-        return forecastTime.getFullYear() === now.getFullYear() && forecastTime.getMonth() === now.getMonth() && forecastTime.getDate() === now.getDate() && forecastTime.getHours() === now.getHours();
+        const forecastTime = new Date(time + "Z"); // Conversion en UTC
+        return forecastTime.getUTCFullYear() === currentYear && forecastTime.getUTCMonth() === currentMonth && forecastTime.getUTCDate() === currentDate && forecastTime.getUTCHours() === currentHour;
     });
 };
 

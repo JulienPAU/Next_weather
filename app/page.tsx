@@ -100,6 +100,50 @@ const WeatherPage = () => {
         sunset: weatherData.daily.sunset[index],
     }));
 
+    const getLocalDateTime = (time: string, timeZone: string) => {
+        return new Date(new Date(time).toLocaleString("en-US", { timeZone }));
+    };
+
+    const isDayTime = (forecastTime: string, timeZone: string) => {
+        const localDate = getLocalDateTime(forecastTime, timeZone);
+        const hour = localDate.getHours(); // Heure locale
+
+        // Récupère les valeurs sunrise et sunset sous forme de chaîne ISO
+        const sunriseRaw = weatherData.daily.sunrise[currentDayIndex];
+        const sunsetRaw = weatherData.daily.sunset[currentDayIndex];
+
+        // Affiche les valeurs brutes
+
+        // Convertir les chaînes ISO en objets Date
+        const sunriseDate = new Date(sunriseRaw);
+        const sunsetDate = new Date(sunsetRaw);
+
+        // Vérifie si la conversion en Date a échoué
+        if (isNaN(sunriseDate.getTime()) || isNaN(sunsetDate.getTime())) {
+            console.error("Invalid sunrise or sunset date", sunriseDate, sunsetDate);
+            return false;
+        }
+
+        // Formatage des heures avec toLocaleTimeString
+        const sunriseHour = sunriseDate.toLocaleTimeString("fr-FR", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+        const sunsetHour = sunsetDate.toLocaleTimeString("fr-FR", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+
+        // Convertir l'heure locale en format hh:mm
+        const localTime = localDate.toLocaleTimeString("fr-FR", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+
+        // Comparer les heures
+        return localTime >= sunriseHour && localTime < sunsetHour;
+    };
+
     return (
         <div className={`container mx-auto w-full `}>
             <Header
@@ -121,11 +165,12 @@ const WeatherPage = () => {
                         {hourlyForecast.slice(currentHourIndex + 1, currentHourIndex + 6).map((forecast, index) => (
                             <WeatherCard
                                 key={index}
-                                icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, forecast.is_day)}
+                                icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, isDayTime(forecast.time, weatherData.timezone) ? 1 : 0)}
                                 description={getWeatherText(forecast.weathercode)}
                                 time={new Date(forecast.time).toLocaleTimeString("fr-FR", {
                                     hour: "2-digit",
                                     minute: "2-digit",
+                                    timeZone: weatherData.timezone,
                                 })}
                                 temperature={forecast.temperature}
                                 temperature_apparent={forecast.temperature_apparent}
@@ -141,11 +186,12 @@ const WeatherPage = () => {
                             hourlyForecast.slice(currentHourIndex + 6, currentHourIndex + 11).map((forecast, index) => (
                                 <WeatherCard
                                     key={index}
-                                    icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, forecast.is_day)}
+                                    icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, isDayTime(forecast.time, weatherData.timezone) ? 1 : 0)}
                                     description={getWeatherText(forecast.weathercode)}
                                     time={new Date(forecast.time).toLocaleTimeString("fr-FR", {
                                         hour: "2-digit",
                                         minute: "2-digit",
+                                        timeZone: weatherData.timezone,
                                     })}
                                     temperature={forecast.temperature}
                                     temperature_apparent={forecast.temperature_apparent}

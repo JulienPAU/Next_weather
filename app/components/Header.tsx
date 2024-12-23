@@ -101,8 +101,6 @@ export default function Header({ location, setLocation, loadWeatherData, weather
 
     const { date, time } = formatDateTime(weatherData?.timezone);
 
-    console.log(getWindDirectionIcon(weatherData?.current?.wind_direction_10m)); // Voir ce que retourne la fonction
-
     return (
         <div className="flex flex-col lg:flex-row items-center justify-evenly p-4 gap-8  ">
             {/* Premier élément */}

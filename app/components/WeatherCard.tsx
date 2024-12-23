@@ -13,6 +13,7 @@ interface WeatherCardProps {
     humidity?: number;
     visibility?: number;
     time: string;
+    timezone?: string;
     precipitation?: number;
     cardStyle?: string;
     temperature_apparent?: number;

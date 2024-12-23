@@ -22,8 +22,8 @@ export interface WeatherData {
         weather_code: number[];
         apparent_temperature_max: number[];
         apparent_temperature_min: number[];
-        sunrise: string[];
-        sunset: string[];
+        sunrise: any[];
+        sunset: any[];
     };
     hourly: {
         temperature_2m: number[];
@@ -31,12 +31,14 @@ export interface WeatherData {
         wind_direction_10m: number[];
         relative_humidity_2m: number[];
         time: string[];
+        timezone: string[];
         visibility: number[];
         precipitation: number[];
         weather_code: number[];
         apparent_temperature: number[];
         is_day: number[];
     };
+    timezone: string;
 }
 
 export interface Location {
@@ -52,4 +54,18 @@ export interface HourlyForecast {
     humidity: number;
     visibility: number;
     precipitation: number;
+    timezone: string;
+}
+
+export interface DailyForecast {
+    time: string;
+    wind: number;
+    precipitation: number;
+    weathercode: number;
+    temperature_2m_max: number;
+    temperature_2m_min: number;
+    temperature_apparent_max: number;
+    temperature_apparent_min: number;
+    sunrise: string;
+    sunset: string;
 }
