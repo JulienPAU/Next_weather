@@ -8,11 +8,11 @@ export const getWeatherIcon = (weatherCode: number, precipitation: number, is_da
     switch (true) {
         // Ciel dégagé
         case weatherCode === 0 || weatherCode === 1:
-            return is_day ? "fa-sun text-yellow-500" : "fa-moon text-blue-700";
+            return is_day ? "fa-sun text-yellow-500" : "fa-moon text-blue-500";
 
         // Partiellement nuageux
         case weatherCode === 2:
-            return is_day ? "fa-cloud-sun text-yellow-900" : "fa-cloud-moon text-blue-700";
+            return is_day ? "fa fa-cloud-sun inset-0 text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-gray-500" : "fa-cloud-moon  inset-0 text-transparent bg-clip-text bg-gradient-to-br from-blue-500 to-gray-700";
 
         // Nuageux
         case weatherCode === 3:
@@ -29,9 +29,9 @@ export const getWeatherIcon = (weatherCode: number, precipitation: number, is_da
         // Pluies
         case weatherCode >= 60 && weatherCode <= 69:
             if (precipitation > 5) {
-                return "fa-cloud-showers-heavy text-blue-500";
+                return "fa-cloud-showers-heavy text-blue-800";
             }
-            return "fa-cloud-rain text-gray-500";
+            return "fa-cloud-rain text-blue-600";
 
         // Gel
         case weatherCode >= 80 && weatherCode <= 84:
@@ -47,7 +47,7 @@ export const getWeatherIcon = (weatherCode: number, precipitation: number, is_da
 
         // Orages
         case weatherCode >= 95 && weatherCode <= 99:
-            return "fa-cloud-bolt text-yellow-300";
+            return "fa-cloud-bolt sun inset-0 text-transparent bg-clip-text bg-gradient-to-t from-yellow-500 to-gray-500";
 
         // Par défaut
         default:
@@ -74,7 +74,7 @@ export const getWeatherText = (weatherCode: number): string => {
         case weatherCode >= 80 && weatherCode <= 84:
             return "Gel";
         case weatherCode === 85 || weatherCode === 86:
-            return "Averses de neige";
+            return "Pluie / Neige";
         case weatherCode >= 95 && weatherCode <= 99:
             return "Orage";
         default:
@@ -86,6 +86,19 @@ export const formatCityName = (fullName: string): string => {
     return fullName ? fullName.split(",")[0].trim() : "";
 };
 
+export const getWindDirectionIcon = (angle: number): { direction: string; icon: string; rotation: number } => {
+    const normalizedAngle = angle % 360;
+
+    // Pour obtenir la direction cardinale
+    const sector = Math.floor(((normalizedAngle + 22.5) % 360) / 45);
+    const directions = ["Nord", "Nord-est", "Est", "Sud-Est", "Sud", "Sud-Ouest", "Ouest", "Nord-Ouest"];
+
+    return {
+        direction: directions[sector],
+        icon: "fa-location-arrow",
+        rotation: normalizedAngle - 45, // -45 car l'icône pointe par défaut vers le nord-est
+    };
+};
 export const getCurrentHourIndex = (hourlyTimes: string[]): number => {
     const now = new Date();
     return hourlyTimes.findIndex((time) => {
@@ -102,7 +115,7 @@ export const getCurrentDayIndex = (dailyTimes: string[]): number => {
     });
 };
 
-export const formatDateTime = (timezone: string): string => {
+export const formatDateTime = (timezone: string): { date: string; time: string } => {
     const time = moment().tz(timezone);
 
     // Vérifiez si le fuseau horaire est en France
@@ -112,7 +125,7 @@ export const formatDateTime = (timezone: string): string => {
         time.locale("en-gb"); // Définir la locale sur "en-gb" (anglais britannique)
     }
 
-    const datePart = time.format("ddd D MMM YY");
-    const timePart = time.format("HH:mm");
-    return `${datePart} ${timePart}`;
+    const datePart = time.format("dddd D MMMM");
+    const timePart = time.format("HH : mm");
+    return { date: datePart, time: timePart };
 };

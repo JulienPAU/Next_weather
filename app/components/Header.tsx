@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import { Location } from "../utils/types/weather";
 import { fetchCityNameFromCoordinates } from "../utils/api";
 import { useDebouncedCallback } from "../utils/debounce";
+import { getWindDirectionIcon } from "../utils/utils";
 
 interface HeaderProps {
     location: Location;
@@ -10,9 +11,10 @@ interface HeaderProps {
     weatherData: any;
     fetchCityCoordinates: (city: string) => Promise<{ lat: number; lon: number; displayName: string }>;
     formatCityName: (cityName: string) => string;
-    formatDateTime: (timezone: string) => string;
+    formatDateTime: (timezone: string) => { date: string; time: string };
     getWeatherIcon: (weatherCode: number, precipitation: number, is_day: number) => string;
     getWeatherText: (weatherCode: number) => string;
+    getWindDirectionIcon: (angle: number) => { direction: string; icon: string }; // Modification ici
 }
 
 export default function Header({ location, setLocation, loadWeatherData, weatherData, fetchCityCoordinates, formatCityName, formatDateTime, getWeatherIcon, getWeatherText }: HeaderProps) {
@@ -97,41 +99,44 @@ export default function Header({ location, setLocation, loadWeatherData, weather
     const sunriseTimeToday = getSunTimeForToday(weatherData, "sunrise");
     const sunsetTimeToday = getSunTimeForToday(weatherData, "sunset");
 
+    const { date, time } = formatDateTime(weatherData?.timezone);
+
+    console.log(getWindDirectionIcon(weatherData?.current?.wind_direction_10m)); // Voir ce que retourne la fonction
+
     return (
-        <div className="flex flex-col lg:flex-row items-center p-4 gap-10  ">
+        <div className="flex flex-col lg:flex-row items-center justify-evenly p-4 gap-8  ">
             {/* Premier élément */}
-            <div className="rounded-3xl  p-4 flex flex-wrap flex-col gap-3 items-center text-center sm:text-left sm:flex-1 shadow-light dark:shadow-dark">
-                <div className="flex flex-col justify-center items-center gap-2 lg:gap-3 lg:flex-row lg:items-start  ">
-                    <h1 className="text-4xl  font-bold"> {location.cityName ? formatCityName(location.cityName) : "Rechercher votre ville"} </h1>
-                    <div>
-                        {weatherData?.current?.is_day ? (
-                            <div className=" fas fa-sun text-yellow-500 ">
-                                <span className=" text-sm font-serif px-1.5">Jour</span>
-                            </div>
-                        ) : (
-                            <div className=" fas fa-moon text-blue-700 ">
-                                <span className=" text-sm font-serif px-1.5">Nuit</span>
-                            </div>
-                        )}
-                    </div>
+            <div className="rounded-3xl p-3 flex flex-wrap flex-col w-full lg:w-auto gap-3 items-center text-center sm:text-left shadow-light dark:shadow-dark">
+                <h1 className="text-4xl  font-bold"> {location.cityName ? formatCityName(location.cityName) : "Rechercher votre ville"} </h1>
+                <div className="font-extrabold  text-4xl">{time}</div>
+                <div className="flex flex-row gap-2 lg:gap-3 items-center justify-center">
+                    <div className="font-bold">{date}</div>
+                    {weatherData?.current?.is_day ? (
+                        <div className=" fas fa-sun text-yellow-500 ">
+                            <span className=" text-sm font-serif px-1.5">Jour</span>
+                        </div>
+                    ) : (
+                        <div className=" fas fa-moon text-blue-700 ">
+                            <span className=" text-sm font-serif px-1.5">Nuit</span>
+                        </div>
+                    )}
                 </div>
-                <div className="font-bold">{formatDateTime(weatherData?.timezone)}</div>
             </div>
 
             {/* Élement du milieu */}
-            <div className="shadow-light dark:shadow-dark p-4 rounded-3xl mb-2 flex flex-col lg:flex-row gap-4">
+            <div className="shadow-light dark:shadow-dark p-4 rounded-3xl  flex flex-col lg:flex-row gap-4">
                 <div className="flex justify-evenly items-center gap-6 ">
                     <div className="text-center flex gap-3">
-                        <i className={`fas ${getWeatherIcon(weatherData?.current?.weather_code, weatherData?.current?.precipitation, weatherData?.current?.is_day)} text-8xl mb-2 `}></i>
+                        <i className={`fas ${getWeatherIcon(weatherData?.current?.weather_code, weatherData?.current?.precipitation, weatherData?.current?.is_day)} text-8xl mb-2 lg:text-9xl `}></i>
 
                         <div className="flex flex-col gap-1">
-                            <div className="text-4xl font-bold">{weatherData?.current?.temperature_2m}°C</div>
+                            <div className="text-4xl font-extrabold lg:text-5xl">{weatherData?.current?.temperature_2m}°C</div>
                             <p className="font-bold italic ">{getWeatherText(weatherData?.current?.weather_code)}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="p-4 flex flex-col gap-3 items-center justify-center text-center sm:flex-1">
+                <div className=" flex flex-col gap-3 items-center justify-center text-center sm:flex-1">
                     {/* <h2 className="font-bold text-xl sm:text-2xl text-black">Conditions actuelles</h2> */}
                     <div className="flex flex-row w-full justify-evenly text-lg lg:text-base font-bold">
                         <div className="flex flex-col font-semibold">
@@ -151,6 +156,10 @@ export default function Header({ location, setLocation, loadWeatherData, weather
                         <div>
                             <i className="fas fa-wind text-gray-500"></i> {weatherData?.current?.wind_speed_10m} km/h
                         </div>
+                        <div>
+                            <i className={`fas fa-location-arrow`} style={{ transform: `rotate(${getWindDirectionIcon(weatherData?.current?.wind_direction_10m)?.rotation}deg)` }} />{" "}
+                            {getWindDirectionIcon(weatherData?.current?.wind_direction_10m)?.direction}
+                        </div>
 
                         <div>
                             <i className="fas fa-tint text-blue-300"></i> {weatherData?.current?.relative_humidity_2m}%
@@ -159,14 +168,14 @@ export default function Header({ location, setLocation, loadWeatherData, weather
                 </div>
             </div>
 
-            <div className="flex flex-col items-center gap-3 sm:flex-1 shadow-light dark:shadow-dark rounded-3xl p-4 ">
+            <div className="flex flex-col items-center gap-3  w-full lg:w-auto shadow-light dark:shadow-dark rounded-3xl p-4 ">
                 <input
                     type="text"
                     defaultValue=""
                     onChange={handleInputChange}
                     onKeyDown={(e) => e.key === "Enter" && handleCitySearch()}
                     placeholder="Rechercher une ville"
-                    className="border bg-slate-200 rounded-lg px-4 py-2 w-full sm:max-w-xs mb-2"
+                    className="border bg-slate-200 rounded-lg px-4 py-2 w-3/4 lg:w-full sm:max-w-xs mb-2 dark:text-black"
                 />
 
                 <div className="flex gap-4">

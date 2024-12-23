@@ -8,7 +8,8 @@ interface WeatherCardProps {
     description: string;
     high?: number;
     low?: number;
-    wind: number;
+    wind?: number;
+    wind_direction?: number;
     humidity?: number;
     visibility?: number;
     time: string;
@@ -19,9 +20,27 @@ interface WeatherCardProps {
     sunset?: string;
 }
 
-const WeatherCard: React.FC<WeatherCardProps> = ({ title, subtitle, icon, temperature, description, high, low, wind, humidity, visibility, time, precipitation, temperature_apparent, sunrise, sunset, cardStyle = "bg-white" }) => {
+const WeatherCard: React.FC<WeatherCardProps> = ({
+    title,
+    subtitle,
+    icon,
+    temperature,
+    description,
+    high,
+    low,
+    wind,
+    wind_direction,
+    humidity,
+    visibility,
+    time,
+    precipitation,
+    temperature_apparent,
+    sunrise,
+    sunset,
+    cardStyle = "bg-white",
+}) => {
     return (
-        <div className={`${cardStyle}   bg-slate-200 rounded-xl mx-5 lg:mx-0  mb-5 lg:mb-3 gap-5 items-center align-middle shadow-md shadow-gray-300  dark:shadow-gray-700 dark:bg-slate-900  border-2 border-gray-300 dark:border-gray-700`}>
+        <div className={`${cardStyle}   bg-slate-200 rounded-xl mx-5 lg:mx-0  mb-5 lg:mb-3  items-center align-middle shadow-md shadow-gray-300  dark:shadow-gray-700 dark:bg-slate-900  border-2 border-gray-300 dark:border-gray-700`}>
             <div className="text-center ">
                 <div className="flex justify-evenly items-center ">
                     <div className="font-bold text-lg ">{time}</div>
@@ -29,7 +48,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ title, subtitle, icon, temper
                     <div className="font-bold  ">{description}</div>
                 </div>
                 <div className="flex justify-evenly items-center font-bold my-2 ">
-                    <i className={`${icon} fas text-6xl mb-2`}></i>
+                    <i className={`${icon} fas text-6xl mb-1`}></i>
                     {high ? (
                         <div className="flex flex-col gap-2">
                             <div>
@@ -45,12 +64,22 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ title, subtitle, icon, temper
                         <div className="text-3xl">{temperature} °C</div>
                     )}
                 </div>
-                {temperature_apparent !== null && temperature_apparent !== undefined ? (
-                    <div className="font-semibold italic">
-                        <i className="fas fa-thermometer-half text-blue-500 mr-2 "></i>
-                        Ressenti {temperature_apparent}°C
-                    </div>
-                ) : null}
+                <div className="flex justify-evenly items-center lg:text-sm font-semibold lg:font-extrabold gap-2 italic">
+                    {wind ? (
+                        <>
+                            <div>
+                                <i className="fas fa-wind text-gray-500 "></i> {wind} km/h
+                            </div>
+                        </>
+                    ) : null}
+
+                    {temperature_apparent !== null && temperature_apparent !== undefined ? (
+                        <div>
+                            <i className="fas fa-thermometer-half text-blue-500 mr-2 "></i>
+                            Ressenti {temperature_apparent}°C
+                        </div>
+                    ) : null}
+                </div>
             </div>
             <div className="font-semibold">
                 {/* 

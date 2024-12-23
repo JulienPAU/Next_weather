@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Loader from "./components/Loader";
-import { getWeatherIcon, formatCityName, getCurrentHourIndex, formatDateTime, getWeatherText, getCurrentDayIndex } from "./utils/utils";
+import { getWeatherIcon, formatCityName, getCurrentHourIndex, formatDateTime, getWeatherText, getCurrentDayIndex, getWindDirectionIcon } from "./utils/utils";
 import { fetchWeatherData, fetchCityCoordinates } from "./utils/api";
 import { WeatherData, Location, HourlyForecast } from "./utils/types/weather";
 import Header from "./components/Header";
@@ -10,6 +10,8 @@ import WeatherCard from "./components/WeatherCard";
 
 const WeatherPage = () => {
     const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+    const [showMore, setShowMore] = useState(false);
+    const [showMoreWeekly, setShowMoreWeekly] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [location, setLocation] = useState<Location>({
@@ -75,6 +77,8 @@ const WeatherPage = () => {
         time,
         temperature: weatherData.hourly.temperature_2m[index],
         wind: weatherData.hourly.wind_speed_10m[index],
+        wind_direction: weatherData.hourly.wind_direction_10m[index],
+
         humidity: weatherData.hourly.relative_humidity_2m[index],
         visibility: weatherData.hourly.visibility[index],
         precipitation: weatherData.hourly.precipitation[index],
@@ -108,12 +112,13 @@ const WeatherPage = () => {
                 formatDateTime={formatDateTime}
                 getWeatherIcon={getWeatherIcon}
                 getWeatherText={getWeatherText}
+                getWindDirectionIcon={getWindDirectionIcon}
             />
             <div className="flex flex-wrap flex-col justify-evenly p-4  w-full">
-                <div className="rounded-3xl p-4 flex flex-wrap flex-col gap-3 items-center text-center sm:text-left sm:flex-1 shadow-light dark:shadow-dark my-5">
-                    <h2 className="text-2xl font-semibold m-4 text-center">Prévisions horaires</h2>
+                <div className="rounded-3xl  flex flex-wrap flex-col gap-3 items-center justify-evenly text-center sm:text-left sm:flex-1 shadow-light dark:shadow-dark my-5">
+                    <h2 className="text-2xl font-semibold mt-2 text-center">Prévisions horaires</h2>
                     <div className="flex flex-wrap w-full  lg:gap-1 sm:gap-3 justify-evenly">
-                        {hourlyForecast.slice(currentHourIndex + 1, currentHourIndex + 11).map((forecast, index) => (
+                        {hourlyForecast.slice(currentHourIndex + 1, currentHourIndex + 6).map((forecast, index) => (
                             <WeatherCard
                                 key={index}
                                 icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, forecast.is_day)}
@@ -131,13 +136,36 @@ const WeatherPage = () => {
                                 cardStyle="bg-none w-full lg:w-2/12 text-center py-1"
                             />
                         ))}
+
+                        {showMore &&
+                            hourlyForecast.slice(currentHourIndex + 6, currentHourIndex + 11).map((forecast, index) => (
+                                <WeatherCard
+                                    key={index}
+                                    icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, forecast.is_day)}
+                                    description={getWeatherText(forecast.weathercode)}
+                                    time={new Date(forecast.time).toLocaleTimeString("fr-FR", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    })}
+                                    temperature={forecast.temperature}
+                                    temperature_apparent={forecast.temperature_apparent}
+                                    wind={forecast.wind}
+                                    humidity={forecast.humidity}
+                                    visibility={forecast.visibility}
+                                    precipitation={forecast.precipitation}
+                                    cardStyle="bg-none w-full lg:w-2/12 text-center py-1"
+                                />
+                            ))}
                     </div>
+                    <button onClick={() => setShowMore(!showMore)} className="mt-2 mb-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                        {showMore ? "Voir moins" : "Voir plus"}
+                    </button>
                 </div>
 
-                <div className="rounded-3xl p-4 flex flex-wrap flex-col gap-3 items-center text-center sm:text-left sm:flex-1 shadow-light dark:shadow-dark my-5">
-                    <h2 className="text-2xl font-semibold m-4 text-center">Prévisions hebdomadaires</h2>
+                <div className="rounded-3xl  flex flex-wrap flex-col gap-3 items-center justify-evenly text-center sm:text-left sm:flex-1 shadow-light dark:shadow-dark my-5">
+                    <h2 className="text-2xl font-semibold mt-2 text-center">Prévisions hebdomadaires</h2>
                     <div className="flex flex-wrap w-full  lg:gap-1 sm:gap-3 justify-evenly">
-                        {dailyForecast.slice(currentDayIndex - 1).map((forecast, index) => (
+                        {dailyForecast.slice(currentDayIndex - 1, currentDayIndex + 4).map((forecast, index) => (
                             <WeatherCard
                                 key={index}
                                 title="Prévision quotidienne"
@@ -148,7 +176,6 @@ const WeatherPage = () => {
                                     day: "numeric",
                                     month: "short",
                                 })}
-                                wind={forecast.wind}
                                 precipitation={forecast.precipitation}
                                 high={forecast.temperature_2m_max}
                                 low={forecast.temperature_2m_min}
@@ -163,7 +190,38 @@ const WeatherPage = () => {
                                 })}
                             />
                         ))}
+
+                        {showMoreWeekly &&
+                            dailyForecast.slice(currentDayIndex + 4).map((forecast, index) => (
+                                <WeatherCard
+                                    key={index}
+                                    title="Prévision quotidienne"
+                                    icon={getWeatherIcon(forecast.weathercode, forecast.precipitation, 1)}
+                                    description={getWeatherText(forecast.weathercode)}
+                                    time={new Date(forecast.time).toLocaleDateString("fr-FR", {
+                                        weekday: "short",
+                                        day: "numeric",
+                                        month: "short",
+                                    })}
+                                    precipitation={forecast.precipitation}
+                                    high={forecast.temperature_2m_max}
+                                    low={forecast.temperature_2m_min}
+                                    cardStyle="bg-none w-full lg:w-2/12 text-center py-1 px-1"
+                                    sunrise={new Date(forecast.sunrise).toLocaleTimeString("fr-FR", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    })}
+                                    sunset={new Date(forecast.sunset).toLocaleTimeString("fr-FR", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    })}
+                                />
+                            ))}
                     </div>
+
+                    <button onClick={() => setShowMoreWeekly(!showMoreWeekly)} className="mt-2 mb-2 px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                        {showMoreWeekly ? "Voir moins" : "Voir plus"}
+                    </button>
                 </div>
             </div>
         </div>

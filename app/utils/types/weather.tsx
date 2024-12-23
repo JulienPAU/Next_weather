@@ -2,6 +2,7 @@ export interface WeatherData {
     current: {
         temperature_2m: number;
         wind_speed_10m: number;
+        wind_direction_10m: number;
         relative_humidity_2m: number;
         apparent_temperature: number;
         precipitation: number;
@@ -27,6 +28,7 @@ export interface WeatherData {
     hourly: {
         temperature_2m: number[];
         wind_speed_10m: number[];
+        wind_direction_10m: number[];
         relative_humidity_2m: number[];
         time: string[];
         visibility: number[];
