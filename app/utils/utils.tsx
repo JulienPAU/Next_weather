@@ -96,7 +96,7 @@ export const getWindDirectionIcon = (angle: number): { direction: string; icon: 
     return {
         direction: directions[sector],
         icon: "fa-location-arrow",
-        rotation: normalizedAngle - 55, // -45 car l'icône pointe par défaut vers le nord-est
+        rotation: normalizedAngle - 45, // -45 car l'icône pointe par défaut vers le nord-est
     };
 };
 export const getCurrentHourIndex = (hourlyTimes: string[]): number => {
