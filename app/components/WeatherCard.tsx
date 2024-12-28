@@ -54,11 +54,11 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
                         <div className="flex flex-col gap-2">
                             <div>
                                 <i className="fas fa-thermometer-half text-blue-500 mr-2"></i>
-                                Max {high}°C
+                                Max {high ? high : "no data"}°C
                             </div>
                             <div>
                                 <i className="fas fa-thermometer-half text-blue-500 mr-2"></i>
-                                Min {low}°C`
+                                Min {low ? low : "no data"}°C`
                             </div>
                         </div>
                     ) : (
@@ -83,17 +83,6 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
                 </div>
             </div>
             <div className="font-semibold">
-                {/* 
-
-                <div>
-                    <i className="fas fa-wind text-gray-500"></i> {wind} km/h
-                </div>
-                {visibility ? (
-                    <div>
-                        <i className="fas fa-tint text-blue-300"></i> {humidity}%
-                    </div>
-                ) : null} */}
-
                 {sunrise && sunset ? (
                     <div className="flex justify-evenly items-center">
                         <div className="flex gap-1">
@@ -111,26 +100,3 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
 };
 
 export default React.memo(WeatherCard);
-
-{
-    /* 
-
-
-<div className="mt-4 text-center">
-<div className="text-sm text-gray-500">Précipitations</div>
-<div className="font-bold text-lg">{precipitation} mm</div>
-</div> */
-}
-
-{
-    /* <div className="mt-4 grid grid-cols-2 gap-4">
-<div className="text-center">
-    <div className="text-sm text-gray-500">Max</div>
-    <div className="font-bold text-lg">{high}°C</div>
-</div>
-<div className="text-center">
-    <div className="text-sm text-gray-500">Min</div>
-    <div className="font-bold text-lg">{low}°C</div>
-</div>
-</div> */
-}

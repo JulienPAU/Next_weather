@@ -155,7 +155,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
                             <i className="fas fa-wind text-gray-500"></i> {weatherData?.current?.wind_speed_10m} km/h
                         </div>
                         <div>
-                            <i className={`fas fa-location-arrow`} style={{ transform: `rotate(${getWindDirectionIcon(weatherData?.current?.wind_direction_10m)?.rotation}deg)` }} />{" "}
+                            <i className={`fas fa-location-arrow text-cyan-300`} style={{ transform: `rotate(${getWindDirectionIcon(weatherData?.current?.wind_direction_10m)?.rotation}deg)` }} />{" "}
                             {getWindDirectionIcon(weatherData?.current?.wind_direction_10m)?.direction}
                         </div>
 
