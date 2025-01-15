@@ -41,35 +41,41 @@ const WeatherPage = () => {
     useEffect(() => {
         const savedLocation = localStorage.getItem("lastLocation");
         if (savedLocation) {
-            const { latitude, longitude, cityName } = JSON.parse(savedLocation);
-            loadWeatherData(latitude, longitude, cityName);
-        }
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const { latitude, longitude } = position.coords;
-                    try {
-                        // Appeler l'API pour obtenir le nom de la ville
-                        const cityName = await fetchCityNameFromCoordinates(latitude, longitude);
-                        loadWeatherData(latitude, longitude, cityName);
-                        setLoading(false);
-                    } catch (err) {
-                        console.error("Erreur lors de la récupération du nom de la ville :", err);
-                        // Charger les données sans le nom de la ville si l'API échoue
-                        loadWeatherData(latitude, longitude);
-                        setLoading(false);
-                    }
-                },
-                (error) => {
-                    console.error("Erreur de localisation :", error.message);
-                    // Si l'utilisateur refuse, charger une localisation par défaut
-                    loadWeatherData(location.latitude, location.longitude);
-                }
-            );
+            const parsedLocation = JSON.parse(savedLocation);
+            console.log("Location from local storage:", parsedLocation.cityName);
+            setLocation({
+                latitude: parsedLocation.latitude,
+                longitude: parsedLocation.longitude,
+                cityName: parsedLocation.cityName || "Ville non trouvée",
+            });
+            loadWeatherData(parsedLocation.latitude, parsedLocation.longitude, parsedLocation.cityName);
         } else {
-            console.error("La géolocalisation n'est pas supportée par ce navigateur.");
-            loadWeatherData(location.latitude, location.longitude);
-            setLoading(false);
+            // Si aucun emplacement n'est trouvé dans le localStorage, on utilise la géolocalisation
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const { latitude, longitude } = position.coords;
+                        try {
+                            const cityName = await fetchCityNameFromCoordinates(latitude, longitude);
+                            setLocation((prevState) => {
+                                // Ne pas écraser cityName si déjà défini
+                                return prevState.cityName ? prevState : { latitude, longitude, cityName };
+                            });
+                            loadWeatherData(latitude, longitude, cityName);
+                        } catch (err) {
+                            console.error("Erreur lors de la récupération du nom de la ville :", err);
+                            loadWeatherData(latitude, longitude);
+                        }
+                    },
+                    (error) => {
+                        console.error("Erreur de localisation :", error.message);
+                        loadWeatherData(location.latitude, location.longitude);
+                    }
+                );
+            } else {
+                console.error("La géolocalisation n'est pas supportée par ce navigateur.");
+                loadWeatherData(location.latitude, location.longitude);
+            }
         }
     }, []);
 

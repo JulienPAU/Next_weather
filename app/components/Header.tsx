@@ -52,17 +52,14 @@ export default function Header({ location, setLocation, loadWeatherData, weather
                     const { latitude, longitude } = position.coords;
 
                     try {
-                        // Récupère le nom de la ville via l'API
                         const cityName = await fetchCityNameFromCoordinates(latitude, longitude);
 
-                        // Mets à jour la localisation avec le nom de la ville
-                        setLocation({
-                            latitude,
-                            longitude,
-                            cityName,
-                        });
+                        const newLocation = { latitude, longitude, cityName };
+                        setLocation(newLocation);
 
-                        // Charge les données météo
+                        // Mettre à jour le localStorage
+                        localStorage.setItem("location", JSON.stringify(newLocation));
+
                         await loadWeatherData(latitude, longitude, cityName);
                         setLoading(false);
                     } catch (err) {
