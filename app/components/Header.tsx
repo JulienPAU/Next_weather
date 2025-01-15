@@ -3,7 +3,6 @@ import { Location } from "../utils/types/weather";
 import { fetchCityNameFromCoordinates } from "../utils/api";
 import { useDebouncedCallback } from "../utils/debounce";
 import { getWindDirectionIcon } from "../utils/utils";
-import Loader from "./Loader";
 
 interface HeaderProps {
     location: Location;
@@ -21,8 +20,6 @@ interface HeaderProps {
 export default function Header({ location, setLocation, loadWeatherData, weatherData, fetchCityCoordinates, formatCityName, formatDateTime, getWeatherIcon, getWeatherText }: HeaderProps) {
     const [error, setError] = useState<string | null>(null);
     const [citySearch, setCitySearch] = useState("");
-    const [loading, setLoading] = useState(false);
-
     const inputValueRef = useRef("");
 
     const debouncedSetCitySearch = useDebouncedCallback((value: string) => setCitySearch(value), 2000);
@@ -47,12 +44,19 @@ export default function Header({ location, setLocation, loadWeatherData, weather
     }, [fetchCityCoordinates, loadWeatherData]);
 
     const handleGeolocation = async () => {
-        const savedLocation = localStorage.getItem("lastLocation");
-        if (savedLocation) {
-            const { latitude, longitude, cityName } = JSON.parse(savedLocation);
-            loadWeatherData(latitude, longitude, cityName);
+        // Vérifier si une localisation est déjà sauvegardée
+        if (location.latitude && location.longitude) {
+            try {
+                // Utilisez les coordonnées sauvegardées pour récupérer les informations météorologiques
+                await loadWeatherData(location.latitude, location.longitude, location.cityName);
+            } catch (err) {
+                console.error("Erreur avec la localisation sauvegardée:", err);
+                setError("Erreur avec la localisation sauvegardée");
+            }
+            return; // Sortir de la fonction si la localisation est déjà présente
         }
-        setLoading(true);
+
+        // Si aucune localisation n'est sauvegardée, demandez la géolocalisation
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
@@ -74,19 +78,15 @@ export default function Header({ location, setLocation, loadWeatherData, weather
                     } catch (err) {
                         console.error("Erreur lors de la récupération du nom de la ville:", err);
                         setError("Impossible de déterminer la ville");
-                    } finally {
-                        setLoading(false); // Masquer le loader une fois les données récupérées
                     }
                 },
                 (error) => {
                     console.error("Erreur de géolocalisation:", error);
                     setError("Impossible de récupérer la localisation");
-                    setLoading(false);
                 }
             );
         } else {
             setError("Géolocalisation non supportée");
-            setLoading(false);
         }
     };
 
@@ -113,10 +113,6 @@ export default function Header({ location, setLocation, loadWeatherData, weather
     const sunsetTimeToday = getSunTimeForToday(weatherData, "sunset");
 
     const { date, time } = formatDateTime(weatherData?.timezone);
-
-    if (loading) {
-        return <Loader />;
-    }
 
     return (
         <div className="flex flex-col lg:flex-row items-center justify-evenly p-4 gap-8  ">
