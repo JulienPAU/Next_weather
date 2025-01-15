@@ -39,6 +39,11 @@ const WeatherPage = () => {
 
     // Effets de chargement initial et sauvegarde de location
     useEffect(() => {
+        const savedLocation = localStorage.getItem("lastLocation");
+        if (savedLocation) {
+            const { latitude, longitude, cityName } = JSON.parse(savedLocation);
+            loadWeatherData(latitude, longitude, cityName);
+        }
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
