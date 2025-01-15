@@ -52,6 +52,7 @@ const WeatherPage = () => {
                         console.error("Erreur lors de la récupération du nom de la ville :", err);
                         // Charger les données sans le nom de la ville si l'API échoue
                         loadWeatherData(latitude, longitude);
+                        setLoading(false);
                     }
                 },
                 (error) => {
@@ -63,6 +64,7 @@ const WeatherPage = () => {
         } else {
             console.error("La géolocalisation n'est pas supportée par ce navigateur.");
             loadWeatherData(location.latitude, location.longitude);
+            setLoading(false);
         }
     }, []);
 
