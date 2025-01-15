@@ -47,6 +47,7 @@ const WeatherPage = () => {
                         // Appeler l'API pour obtenir le nom de la ville
                         const cityName = await fetchCityNameFromCoordinates(latitude, longitude);
                         loadWeatherData(latitude, longitude, cityName);
+                        setLoading(false);
                     } catch (err) {
                         console.error("Erreur lors de la récupération du nom de la ville :", err);
                         // Charger les données sans le nom de la ville si l'API échoue
