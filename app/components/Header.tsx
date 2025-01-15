@@ -20,8 +20,6 @@ interface HeaderProps {
 export default function Header({ location, setLocation, loadWeatherData, weatherData, fetchCityCoordinates, formatCityName, formatDateTime, getWeatherIcon, getWeatherText }: HeaderProps) {
     const [error, setError] = useState<string | null>(null);
     const [citySearch, setCitySearch] = useState("");
-    const [isFirstRender, setIsFirstRender] = useState(true);
-
     const inputValueRef = useRef("");
 
     const debouncedSetCitySearch = useDebouncedCallback((value: string) => setCitySearch(value), 2000);
@@ -45,7 +43,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
         }
     }, [fetchCityCoordinates, loadWeatherData]);
 
-    const handleGeolocation = useCallback(async () => {
+    const handleGeolocation = async () => {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
@@ -77,15 +75,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
         } else {
             setError("Géolocalisation non supportée");
         }
-    }, [setLocation, loadWeatherData, fetchCityNameFromCoordinates]);
-
-    useEffect(() => {
-        // On vérifie aussi qu'on n'a pas déjà une localisation pour éviter les flashs
-        if (isFirstRender && !location.cityName && !location.latitude && !location.longitude) {
-            handleGeolocation();
-            setIsFirstRender(false);
-        }
-    }, [handleGeolocation, isFirstRender, location]);
+    };
 
     const getSunTimeForToday = (weatherData: any, sunEvent: any) => {
         if (!weatherData?.daily) {

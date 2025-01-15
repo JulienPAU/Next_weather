@@ -44,7 +44,23 @@ const WeatherPage = () => {
             const parsedLocation = JSON.parse(savedLocation);
             loadWeatherData(parsedLocation.latitude, parsedLocation.longitude, parsedLocation.cityName);
         } else {
-            loadWeatherData(location.latitude, location.longitude);
+            // Demande la localisation de l'utilisateur
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        loadWeatherData(latitude, longitude);
+                    },
+                    (error) => {
+                        console.error("Erreur de localisation :", error.message);
+                        // Si l'utilisateur refuse, charger une localisation par défaut
+                        loadWeatherData(location.latitude, location.longitude);
+                    }
+                );
+            } else {
+                console.error("La géolocalisation n'est pas supportée par ce navigateur.");
+                loadWeatherData(location.latitude, location.longitude);
+            }
         }
     }, []);
 
