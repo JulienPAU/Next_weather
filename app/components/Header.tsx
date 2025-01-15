@@ -84,7 +84,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
             handleGeolocation();
             setIsFirstRender(false);
         }
-    }, [handleGeolocation, isFirstRender]);
+    }, []);
 
     const getSunTimeForToday = (weatherData: any, sunEvent: any) => {
         if (!weatherData?.daily) {
