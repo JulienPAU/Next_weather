@@ -20,6 +20,8 @@ interface HeaderProps {
 export default function Header({ location, setLocation, loadWeatherData, weatherData, fetchCityCoordinates, formatCityName, formatDateTime, getWeatherIcon, getWeatherText }: HeaderProps) {
     const [error, setError] = useState<string | null>(null);
     const [citySearch, setCitySearch] = useState("");
+    const [isFirstRender, setIsFirstRender] = useState(true);
+
     const inputValueRef = useRef("");
 
     const debouncedSetCitySearch = useDebouncedCallback((value: string) => setCitySearch(value), 2000);
@@ -78,11 +80,11 @@ export default function Header({ location, setLocation, loadWeatherData, weather
     }, [setLocation, loadWeatherData, fetchCityNameFromCoordinates]);
 
     useEffect(() => {
-        // Si on n'a pas de ville, on demande la géolocalisation
-        if (!location.cityName) {
+        if (isFirstRender) {
             handleGeolocation();
+            setIsFirstRender(false);
         }
-    }, [location.cityName, handleGeolocation]);
+    }, [handleGeolocation, isFirstRender]);
 
     const getSunTimeForToday = (weatherData: any, sunEvent: any) => {
         if (!weatherData?.daily) {
