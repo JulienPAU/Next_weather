@@ -3,6 +3,7 @@ import { Location } from "../utils/types/weather";
 import { fetchCityNameFromCoordinates } from "../utils/api";
 import { useDebouncedCallback } from "../utils/debounce";
 import { getWindDirectionIcon } from "../utils/utils";
+import Loader from "./Loader";
 
 interface HeaderProps {
     location: Location;
@@ -111,21 +112,27 @@ export default function Header({ location, setLocation, loadWeatherData, weather
         <div className="flex flex-col lg:flex-row items-center justify-evenly p-4 gap-8  ">
             {/* Premier élément */}
             <div className="rounded-3xl p-3 flex flex-wrap flex-col w-full lg:w-auto gap-3 items-center text-center sm:text-left shadow-light dark:shadow-dark">
-                {loading ? <div className="text-2xl font-bold">Chargement...</div> : null}
-                <h1 className="text-4xl  font-bold"> {location.cityName ? formatCityName(location.cityName) : "Rechercher votre ville"} </h1>
-                <div className="font-extrabold  text-4xl">{time}</div>
-                <div className="flex flex-row gap-2 lg:gap-3 items-center justify-center">
-                    <div className="font-bold">{date}</div>
-                    {weatherData?.current?.is_day ? (
-                        <div className=" fas fa-sun text-yellow-500 ">
-                            <span className=" text-sm font-serif px-1.5">Jour</span>
+                {loading ? (
+                    <Loader />
+                ) : (
+                    <>
+                        {" "}
+                        <h1 className="text-4xl  font-bold"> {location.cityName ? formatCityName(location.cityName) : "Rechercher votre ville"} </h1>
+                        <div className="font-extrabold  text-4xl">{time}</div>
+                        <div className="flex flex-row gap-2 lg:gap-3 items-center justify-center">
+                            <div className="font-bold">{date}</div>
+                            {weatherData?.current?.is_day ? (
+                                <div className=" fas fa-sun text-yellow-500 ">
+                                    <span className=" text-sm font-serif px-1.5">Jour</span>
+                                </div>
+                            ) : (
+                                <div className=" fas fa-moon text-blue-700 ">
+                                    <span className=" text-sm font-serif px-1.5">Nuit</span>
+                                </div>
+                            )}
                         </div>
-                    ) : (
-                        <div className=" fas fa-moon text-blue-700 ">
-                            <span className=" text-sm font-serif px-1.5">Nuit</span>
-                        </div>
-                    )}
-                </div>
+                    </>
+                )}
             </div>
 
             {/* Élement du milieu */}
