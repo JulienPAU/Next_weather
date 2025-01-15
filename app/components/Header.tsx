@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Location } from "../utils/types/weather";
 import { fetchCityNameFromCoordinates } from "../utils/api";
 import { useDebouncedCallback } from "../utils/debounce";
