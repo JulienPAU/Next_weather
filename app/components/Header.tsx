@@ -43,7 +43,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
         }
     }, [fetchCityCoordinates, loadWeatherData]);
 
-    const handleGeolocation = async () => {
+    const handleGeolocation = useCallback(async () => {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
@@ -75,11 +75,14 @@ export default function Header({ location, setLocation, loadWeatherData, weather
         } else {
             setError("Géolocalisation non supportée");
         }
-    };
+    }, [setLocation, loadWeatherData, fetchCityNameFromCoordinates]);
 
     useEffect(() => {
-        handleGeolocation();
-    }, []);
+        // Si on n'a pas de ville, on demande la géolocalisation
+        if (!location.cityName) {
+            handleGeolocation();
+        }
+    }, [location.cityName, handleGeolocation]);
 
     const getSunTimeForToday = (weatherData: any, sunEvent: any) => {
         if (!weatherData?.daily) {
