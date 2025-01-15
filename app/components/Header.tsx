@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Location } from "../utils/types/weather";
 import { fetchCityNameFromCoordinates } from "../utils/api";
 import { useDebouncedCallback } from "../utils/debounce";
@@ -20,6 +20,7 @@ interface HeaderProps {
 export default function Header({ location, setLocation, loadWeatherData, weatherData, fetchCityCoordinates, formatCityName, formatDateTime, getWeatherIcon, getWeatherText }: HeaderProps) {
     const [error, setError] = useState<string | null>(null);
     const [citySearch, setCitySearch] = useState("");
+    const [loading, setLoading] = useState(false);
     const inputValueRef = useRef("");
 
     const debouncedSetCitySearch = useDebouncedCallback((value: string) => setCitySearch(value), 2000);
@@ -44,6 +45,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
     }, [fetchCityCoordinates, loadWeatherData]);
 
     const handleGeolocation = async () => {
+        setLoading(true);
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
@@ -62,18 +64,22 @@ export default function Header({ location, setLocation, loadWeatherData, weather
 
                         // Charge les données météo
                         await loadWeatherData(latitude, longitude, cityName);
+                        setLoading(false);
                     } catch (err) {
                         console.error("Erreur lors de la récupération du nom de la ville:", err);
                         setError("Impossible de déterminer la ville");
+                        setLoading(false);
                     }
                 },
                 (error) => {
                     console.error("Erreur de géolocalisation:", error);
                     setError("Impossible de récupérer la localisation");
+                    setLoading(false);
                 }
             );
         } else {
             setError("Géolocalisation non supportée");
+            setLoading(false);
         }
     };
 
@@ -105,6 +111,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
         <div className="flex flex-col lg:flex-row items-center justify-evenly p-4 gap-8  ">
             {/* Premier élément */}
             <div className="rounded-3xl p-3 flex flex-wrap flex-col w-full lg:w-auto gap-3 items-center text-center sm:text-left shadow-light dark:shadow-dark">
+                {loading ? <div className="text-2xl font-bold">Chargement...</div> : null}
                 <h1 className="text-4xl  font-bold"> {location.cityName ? formatCityName(location.cityName) : "Rechercher votre ville"} </h1>
                 <div className="font-extrabold  text-4xl">{time}</div>
                 <div className="flex flex-row gap-2 lg:gap-3 items-center justify-center">
