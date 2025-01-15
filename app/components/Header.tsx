@@ -113,10 +113,11 @@ export default function Header({ location, setLocation, loadWeatherData, weather
             {/* Premier élément */}
             <div className="rounded-3xl p-3 flex flex-wrap flex-col w-full lg:w-auto gap-3 items-center text-center sm:text-left shadow-light dark:shadow-dark">
                 {loading ? (
-                    <Loader />
+                    <div>
+                        <Loader />
+                    </div>
                 ) : (
                     <>
-                        {" "}
                         <h1 className="text-4xl  font-bold"> {location.cityName ? formatCityName(location.cityName) : "Rechercher votre ville"} </h1>
                         <div className="font-extrabold  text-4xl">{time}</div>
                         <div className="flex flex-row gap-2 lg:gap-3 items-center justify-center">
