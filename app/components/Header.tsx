@@ -47,6 +47,11 @@ export default function Header({ location, setLocation, loadWeatherData, weather
     }, [fetchCityCoordinates, loadWeatherData]);
 
     const handleGeolocation = async () => {
+        const savedLocation = localStorage.getItem("lastLocation");
+        if (savedLocation) {
+            const { latitude, longitude, cityName } = JSON.parse(savedLocation);
+            loadWeatherData(latitude, longitude, cityName);
+        }
         setLoading(true);
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
