@@ -44,19 +44,6 @@ export default function Header({ location, setLocation, loadWeatherData, weather
     }, [fetchCityCoordinates, loadWeatherData]);
 
     const handleGeolocation = async () => {
-        // Vérifier si une localisation est déjà sauvegardée
-        if (location.latitude && location.longitude) {
-            try {
-                // Utilisez les coordonnées sauvegardées pour récupérer les informations météorologiques
-                await loadWeatherData(location.latitude, location.longitude, location.cityName);
-            } catch (err) {
-                console.error("Erreur avec la localisation sauvegardée:", err);
-                setError("Erreur avec la localisation sauvegardée");
-            }
-            return; // Sortir de la fonction si la localisation est déjà présente
-        }
-
-        // Si aucune localisation n'est sauvegardée, demandez la géolocalisation
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
