@@ -3,7 +3,6 @@ import { Location } from "../utils/types/weather";
 import { fetchCityNameFromCoordinates } from "../utils/api";
 import { useDebouncedCallback } from "../utils/debounce";
 import { getWindDirectionIcon } from "../utils/utils";
-import Loader from "./Loader";
 
 interface HeaderProps {
     location: Location;
@@ -113,9 +112,7 @@ export default function Header({ location, setLocation, loadWeatherData, weather
             {/* Premier élément */}
             <div className="rounded-3xl p-3 flex flex-wrap flex-col w-full lg:w-auto gap-3 items-center text-center sm:text-left shadow-light dark:shadow-dark">
                 {loading ? (
-                    <div>
-                        <Loader />
-                    </div>
+                    <div className="text-2xl font-bold text-cyan-600">Chargement...</div>
                 ) : (
                     <>
                         <h1 className="text-4xl  font-bold"> {location.cityName ? formatCityName(location.cityName) : "Rechercher votre ville"} </h1>
