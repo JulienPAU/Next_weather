@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Loader from "./components/Loader";
 import { getWeatherIcon, formatCityName, getCurrentHourIndex, formatDateTime, getWeatherText, getCurrentDayIndex, getWindDirectionIcon } from "./utils/utils";
-import { fetchWeatherData, fetchCityCoordinates } from "./utils/api";
+import { fetchWeatherData, fetchCityCoordinates, fetchCityNameFromCoordinates } from "./utils/api";
 import { WeatherData, Location, HourlyForecast } from "./utils/types/weather";
 import Header from "./components/Header";
 import WeatherCard from "./components/WeatherCard";
@@ -39,28 +39,29 @@ const WeatherPage = () => {
 
     // Effets de chargement initial et sauvegarde de location
     useEffect(() => {
-        const savedLocation = localStorage.getItem("lastLocation");
-        if (savedLocation) {
-            const parsedLocation = JSON.parse(savedLocation);
-            loadWeatherData(parsedLocation.latitude, parsedLocation.longitude, parsedLocation.cityName);
-        } else {
-            // Demande la localisation de l'utilisateur
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const { latitude, longitude } = position.coords;
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    try {
+                        // Appeler l'API pour obtenir le nom de la ville
+                        const cityName = await fetchCityNameFromCoordinates(latitude, longitude);
+                        loadWeatherData(latitude, longitude, cityName);
+                    } catch (err) {
+                        console.error("Erreur lors de la récupération du nom de la ville :", err);
+                        // Charger les données sans le nom de la ville si l'API échoue
                         loadWeatherData(latitude, longitude);
-                    },
-                    (error) => {
-                        console.error("Erreur de localisation :", error.message);
-                        // Si l'utilisateur refuse, charger une localisation par défaut
-                        loadWeatherData(location.latitude, location.longitude);
                     }
-                );
-            } else {
-                console.error("La géolocalisation n'est pas supportée par ce navigateur.");
-                loadWeatherData(location.latitude, location.longitude);
-            }
+                },
+                (error) => {
+                    console.error("Erreur de localisation :", error.message);
+                    // Si l'utilisateur refuse, charger une localisation par défaut
+                    loadWeatherData(location.latitude, location.longitude);
+                }
+            );
+        } else {
+            console.error("La géolocalisation n'est pas supportée par ce navigateur.");
+            loadWeatherData(location.latitude, location.longitude);
         }
     }, []);
 
