@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Location } from "../utils/types/weather";
 import { fetchCityNameFromCoordinates } from "../utils/api";
 import { useDebouncedCallback } from "../utils/debounce";
@@ -76,6 +76,10 @@ export default function Header({ location, setLocation, loadWeatherData, weather
             setError("Géolocalisation non supportée");
         }
     };
+
+    useEffect(() => {
+        handleGeolocation();
+    }, []);
 
     const getSunTimeForToday = (weatherData: any, sunEvent: any) => {
         if (!weatherData?.daily) {
