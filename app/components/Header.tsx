@@ -80,11 +80,12 @@ export default function Header({ location, setLocation, loadWeatherData, weather
     }, [setLocation, loadWeatherData, fetchCityNameFromCoordinates]);
 
     useEffect(() => {
-        if (isFirstRender) {
+        // On vérifie aussi qu'on n'a pas déjà une localisation pour éviter les flashs
+        if (isFirstRender && !location.cityName && !location.latitude && !location.longitude) {
             handleGeolocation();
             setIsFirstRender(false);
         }
-    }, []);
+    }, [handleGeolocation, isFirstRender, location]);
 
     const getSunTimeForToday = (weatherData: any, sunEvent: any) => {
         if (!weatherData?.daily) {
